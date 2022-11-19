@@ -102,6 +102,11 @@ if [ "$OS" != "Linux" -a "$OS" != "Darwin" -a "$OS" != "FreeBSD" -a "$OS" != "Su
     exit
 fi
 
+NOASM=0
+if [[ "$MACHINE" =~ "arm" ]] || [[ "$MACHINE" =~ "aarch" ]]; then
+   NOASM=1
+fi
+
 # Set default values prior to potential overwrite
 # Check to see if CC and CXX are already defined
 if [[ ! -z "$CC" ]]; then
@@ -237,7 +242,7 @@ else
 fi
 
 which yasm > /dev/null
-if [ $? -ne 0 ] ; then
+if [ $? -ne 0 -a $NOASM -eq 0 ] ; then
     which nasm > /dev/null
     if [ $? -ne 0 ] ; then
         echo "please install either yasm or nasm."
