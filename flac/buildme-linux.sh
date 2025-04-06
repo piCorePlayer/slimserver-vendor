@@ -1,7 +1,7 @@
 #!/bin/sh
 
 OGG=1.3.5
-FLAC=1.3.4
+FLAC=1.5.0
 OGG_GIT=""
 FLAC_GIT=""
 LOG=$PWD/config.log
@@ -35,11 +35,11 @@ cd ..
 
 ## Build
 echo "Untarring..."
-tar Jxvf flac-${FLAC}${FLAC_GIT}.tar.xz >> $LOG
+tar Jxf flac-${FLAC}${FLAC_GIT}.tar.xz >> $LOG
 cd flac-$FLAC >> $LOG
 . ../../CPAN/update-config.sh
-patch -p1 < ../01-flac.patch >> $LOG
-patch -p1 < ../02-flac-C-locale.patch >> $LOG
+patch -p1 < ../0001-Flac1.5.0-encoding_bytes_to_read.patch >> $LOG
+patch -p1 < ../0002-Flac1.5.0-Force-use-of-C-locale.patch >> $LOG
 echo "Configuring..."
 ./configure --with-ogg-includes=$PWD/../libogg-$OGG/include --with-ogg-libraries=$PWD/../libogg-$OGG/src/.libs/ --disable-doxygen-docs --disable-shared --disable-xmms-plugin --disable-cpplibs --prefix $OUTPUT >> $LOG
 echo "Running make"

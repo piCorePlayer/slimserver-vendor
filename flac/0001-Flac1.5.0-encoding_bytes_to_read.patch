@@ -1,0 +1,28 @@
+From 90be4c0b4a954577d2315ea1a6f2a73ce326f5ef Mon Sep 17 00:00:00 2001
+From: paul-1 <6473457+paul-1@users.noreply.github.com>
+Date: Thu, 3 Apr 2025 23:52:27 +0000
+Subject: [PATCH 1/2] Change the loop encoding bytes to read to not be a const.
+
+When LMS is piping output of sox or another decoder into flac for
+re-encoding, its possible for the bytes to read to change if the buffer
+is nearing empty.
+---
+ src/flac/encode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/flac/encode.c b/src/flac/encode.c
+index 9606751..d1e67b9 100644
+--- a/src/flac/encode.c
++++ b/src/flac/encode.c
+@@ -1291,7 +1291,7 @@ int flac__encode_file(FILE *infile, FLAC__off_t infilesize, const char *infilena
+ 			case FORMAT_AIFF:
+ 			case FORMAT_AIFF_C:
+ 				while(encoder_session.fmt.iff.data_bytes > 0) {
+-					const size_t bytes_to_read =
++					size_t bytes_to_read =
+ 						(size_t) min (sizeof (ubuffer.u8),
+ 							min (encoder_session.fmt.iff.data_bytes,
+ 								CHUNK_OF_SAMPLES * (uint64_t) encoder_session.info.bytes_per_wide_sample));
+-- 
+2.40.0
+

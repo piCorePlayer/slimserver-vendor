@@ -1,7 +1,7 @@
-From 76505158ddbd2d5ef68ae830d531f9714dc8f936 Mon Sep 17 00:00:00 2001
+From 736413a2b076651106bfa01a2745da93bdb6f12f Mon Sep 17 00:00:00 2001
 From: Martin Williams <martinr.williams@gmail.com>
 Date: Thu, 22 Aug 2019 19:25:50 +0100
-Subject: [PATCH] Force use of 'C' locale, otherwise LMS transcoding breaks
+Subject: [PATCH 2/2] Force use of 'C' locale, otherwise LMS transcoding breaks
 
 In interpreting the mm:ss.ss 'skip' & 'until' specifications, flac
 versions 1.30+ make use of 'strtod', which applies the conventions of
@@ -43,27 +43,28 @@ although the seek points would not be accurate to fractions of a second.
 
 Refer flac commit 4b0f270.
 ---
- src/flac/main.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ src/flac/main.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/src/flac/main.c b/src/flac/main.c
-index be072a3d..43e912b9 100644
+index f45488d..d25b139 100644
 --- a/src/flac/main.c
 +++ b/src/flac/main.c
-@@ -310,6 +310,12 @@ int main(int argc, char *argv[])
+@@ -359,6 +359,13 @@ static int main_to_fuzz(int argc, char *argv[])
  #endif
-
- 	srand((uint32_t)time(0));
+ #endif
+ 
 +
 +#if 1
 +/* LMS patch: Use C locale exclusively */
-+	setlocale(LC_ALL, "C"); /* Belt & braces. Should be the default anyway */
++       setlocale(LC_ALL, "C"); /* Belt & braces. Should be the default anyway */
 +#else
 +/* Original code block: Sets up user locale */
++
  #ifdef _WIN32
  	{
  		const char *var;
-@@ -324,6 +330,9 @@ int main(int argc, char *argv[])
+@@ -373,6 +380,9 @@ static int main_to_fuzz(int argc, char *argv[])
  #else
  	setlocale(LC_ALL, "");
  #endif
@@ -73,9 +74,9 @@ index be072a3d..43e912b9 100644
  	if(!init_options()) {
  		flac__utils_printf(stderr, 1, "ERROR: allocating memory\n");
  		retval = 1;
-@@ -1170,6 +1179,10 @@ static void usage_header(void)
+@@ -1269,6 +1279,10 @@ static void usage_header(void)
  	printf("Copyright (C) 2000-2009  Josh Coalson\n");
- 	printf("Copyright (C) 2011-2016  Xiph.Org Foundation\n");
+ 	printf("Copyright (C) 2011-2025  Xiph.Org Foundation\n");
  	printf("\n");
 +	printf("   Patched for Lyrion Music Server:\n");
 +	printf("   This version of flac operates exclusively in the 'C'\n");
@@ -84,6 +85,6 @@ index be072a3d..43e912b9 100644
  	printf("This program is free software; you can redistribute it and/or\n");
  	printf("modify it under the terms of the GNU General Public License\n");
  	printf("as published by the Free Software Foundation; either version 2\n");
---
-2.20.1
+-- 
+2.40.0
 

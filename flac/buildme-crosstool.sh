@@ -1,9 +1,9 @@
 #!/bin/sh
 
-OGG=1.3.3
-FLAC=1.3.2
-OGG_GIT="-bc82844df068429d209e909da47b1f730b53b689"
-FLAC_GIT="-faafa4c82c31e5aed7bc7c0e87a379825372c6ac"
+OGG=1.3.5
+FLAC=1.5.0
+OGG_GIT=""
+FLAC_GIT=""
 LOG=$PWD/config.log
 CHANGENO=$(git rev-parse --short HEAD)
 OUTPUT=$PWD/flac-build-$TARGET-$CHANGENO
@@ -38,7 +38,7 @@ export CXXFLAGS="-O2"
 
 ## Build Ogg first
 echo "Untarring libogg-$OGG.tar.gz..."
-tar -zxf libogg-${OGG}${OGG_GIT}.tar.gz
+tar -xf libogg-${OGG}${OGG_GIT}.tar.?z
 cd libogg-$OGG
 echo "Configuring..."
 ./configure --host=$TARGET --disable-shared >> $LOG
@@ -48,10 +48,10 @@ cd ..
 
 ## Build
 echo "Untarring..."
-tar zxvf flac-${FLAC}${FLAC_GIT}.tar.gz >> $LOG
+tar xf flac-${FLAC}${FLAC_GIT}.tar.?z >> $LOG
 cd flac-$FLAC >> $LOG
-patch -p1 < ../01-flac.patch >> $LOG
-patch -p1 < ../02-flac-C-locale.patch >> $LOG
+patch -p1 < ../0001-Flac1.5.0-encoding_bytes_to_read.patch >> $LOG
+patch -p1 < ../0002-Flac1.5.0-Force-use-of-C-locale.patch >> $LOG
 echo "Configuring..."
 ./configure --host=$TARGET --with-ogg-includes=$PWD/../libogg-$OGG/include --with-ogg-libraries=$PWD/../libogg-$OGG/src/.libs/ --disable-doxygen-docs --disable-shared --disable-xmms-plugin --disable-cpplibs --prefix $OUTPUT >> $LOG
 echo "Running make"
