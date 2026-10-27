@@ -1,17 +1,17 @@
 #!/bin/sh
 
 SOX=14.4.3
-FLAC=1.3.2
-OGG=1.3.3
-OGG_GIT="-bc82844df068429d209e909da47b1f730b53b689"
-FLAC_GIT="-faafa4c82c31e5aed7bc7c0e87a379825372c6ac"
+FLAC=1.5.0
+OGG=1.3.5
+OGG_GIT=""
+FLAC_GIT=""
 SOX_GIT="-0be259eaa9ce3f3fa587a3ef0cf2c0b9c73167a2"
-VORBIS=1.3.6
+VORBIS=1.3.7
 OPUS=1.2.1
 OPUSFILE=0.11
 MAD=0.15.1b
 MAD_SUB="-8"
-WAVPACK=5.1.0
+WAVPACK=5.3.0
 LOG=$PWD/config.log
 CHANGENO=$(git rev-parse --short HEAD)
 ARCH="osx"
@@ -37,7 +37,7 @@ date > $LOG
 
 ## Build Ogg first
 echo "Untarring libogg-$OGG.tar.gz..."
-tar -zxf libogg-${OGG}${OGG_GIT}.tar.gz 
+tar -Jxf libogg-${OGG}${OGG_GIT}.tar.xz
 cd libogg-$OGG
 echo "Configuring..."
 ./configure CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" --disable-shared --disable-dependency-tracking >> $LOG
@@ -47,7 +47,7 @@ cd ..
 
 ## Build Vorbis
 echo "Untarring libvorbis-$VORBIS.tar.gz..."
-tar -zxf libvorbis-$VORBIS.tar.gz
+tar -Jxf libvorbis-$VORBIS.tar.xz
 cd libvorbis-$VORBIS
 echo "Configuring..."
 ./configure CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" --with-ogg-includes=$PWD/../libogg-$OGG/include --with-ogg-libraries=$PWD/../libogg-$OGG/src/.libs --disable-shared --disable-dependency-tracking >> $LOG
@@ -80,8 +80,9 @@ cd ..
 ## Build FLAC
 # Mac: Disabled ASM code
 echo "Untarring flac-$FLAC.tar.gz..."
-tar zxf flac-${FLAC}${FLAC_GIT}.tar.gz >> $LOG
+tar Jxf flac-${FLAC}${FLAC_GIT}.tar.xz >> $LOG
 cd flac-$FLAC
+patch -p1 < ../01-flac.patch
 echo "Configuring..."
 ./configure CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" --with-ogg-includes=$PWD/../libogg-$OGG/include --with-ogg-libraries=$PWD/../libogg-$OGG/src/.libs/ --disable-shared --disable-xmms-plugin --disable-dependency-tracking --disable-cpplibs >> $LOG
 echo "Running make"

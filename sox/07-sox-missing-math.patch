@@ -1,0 +1,10 @@
+--- src/sox_sample_test.h	2025-04-04 23:31:59.002626792 +0000
++++ src/sox_sample_test.h	2025-04-04 23:30:09.174626858 +0000
+@@ -19,6 +19,7 @@
+ #undef NDEBUG /* Must undef above assert.h or other that might include it. */
+ #endif
+ #include <assert.h>
++#include <math.h>
+ #include "sox.h"
+ 
+ 

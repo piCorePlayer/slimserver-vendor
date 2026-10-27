@@ -241,14 +241,14 @@ else
     GCC_LIBCPP=false
 fi
 
-which yasm > /dev/null
-if [ $? -ne 0 ] ; then
-    which nasm > /dev/null
-    if [ $? -ne 0 ] ; then
-        echo "please install either yasm or nasm."
-        exit 1
-    fi
-fi
+#which yasm > /dev/null
+#if [ $? -ne 0 ] ; then
+#    which nasm > /dev/null
+#    if [ $? -ne 0 ] ; then
+#        echo "please install either yasm or nasm."
+#        exit 1
+#    fi
+#fi
 
 if [ "$OS" = "Linux" ]; then
    #for i in libgif libz libgd ; do

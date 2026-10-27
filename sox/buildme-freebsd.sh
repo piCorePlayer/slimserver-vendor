@@ -1,12 +1,12 @@
 #!/bin/sh
 
 SOX=14.4.3
-OGG=1.3.3
-FLAC=1.3.2
+OGG=1.3.5
+FLAC=1.5.0
 OGG_GIT="-bc82844df068429d209e909da47b1f730b53b689"
 FLAC_GIT="-faafa4c82c31e5aed7bc7c0e87a379825372c6ac"
 SOX_GIT="-0be259eaa9ce3f3fa587a3ef0cf2c0b9c73167a2"
-VORBIS=1.3.6
+VORBIS=1.3.7
 OPUS=1.2.1
 OPUSFILE=0.11
 MAD=0.15.1b
@@ -50,7 +50,7 @@ date > $LOG
 
 ## Build Ogg first
 echo "Untarring libogg-$OGG.tar.gz..."
-tar -zxf libogg-${OGG}${OGG_GIT}.tar.gz
+tar -Jxf libogg-${OGG}${OGG_GIT}.tar.xz
 cd libogg-$OGG
 echo "Configuring..."
 CC=$CC CXX=$CXX ./configure --disable-shared >> $LOG
@@ -60,7 +60,7 @@ cd ..
 
 ## Build Vorbis
 echo "Untarring libvorbis-$VORBIS.tar.gz..."
-tar -zxf libvorbis-$VORBIS.tar.gz
+tar -Jxf libvorbis-$VORBIS.tar.xz
 cd libvorbis-$VORBIS
 echo "Configuring..."
 CC=$CC CXX=$CXX ./configure --with-ogg-includes=$PWD/../libogg-$OGG/include --with-ogg-libraries=$PWD/../libogg-$OGG/src/.libs --disable-shared >> $LOG
@@ -92,7 +92,7 @@ cd ..
 
 ## Build FLAC
 echo "Untarring flac-$FLAC.tar.gz..."
-tar zxf flac-${FLAC}${FLAC_GIT}.tar.gz >> $LOG
+tar Jxf flac-${FLAC}${FLAC_GIT}.tar.xz >> $LOG
 cd flac-$FLAC
 patch -p1 < ../01-flac.patch >> $LOG
 echo "Configuring..."
